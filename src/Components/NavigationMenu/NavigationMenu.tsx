@@ -1,5 +1,5 @@
 import {
-    AppBar, createStyles,
+    AppBar, Button, createStyles,
     CssBaseline,
     Divider,
     Drawer,
@@ -7,7 +7,7 @@ import {
     List,
     ListItem,
     ListItemIcon,
-    ListItemText, Theme, Toolbar, Typography, useTheme
+    ListItemText, Theme, Toolbar, Typography
 } from "@material-ui/core";
 import React, {useState} from "react";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -16,6 +16,9 @@ import {Link} from "@reach/router";
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from "clsx";
 import CategoryIcon from '@material-ui/icons/Category';
+import {useStores} from "../../hooks/use-stores";
+import {NavIconButtonProps, NavTextButtonProps} from "../../Stores/navigationStore";
+import {observer} from "mobx-react";
 
 const drawerWidth = 200;
 
@@ -26,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
-            height: theme.spacing(4),
+            height: theme.spacing(6),
             transition: theme.transitions.create(['width', 'margin'], {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
@@ -42,7 +45,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         menuButton: {
             marginRight: 36,
-            marginTop: -18
         },
         hide: {
             display: 'none',
@@ -50,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
         drawer: {
             width: drawerWidth,
             flexShrink: 0,
-            whiteSpace: 'nowrap',
+            whiteSpace: 'nowrap'
         },
         drawerOpen: {
             width: drawerWidth,
@@ -72,8 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             justifyContent: 'flex-end',
             padding: theme.spacing(0, 1),
-            minHeight: theme.spacing(4),
-            height: theme.spacing(4)
+            minHeight: theme.spacing(6),
         },
         root__toolbar: {
             minHeight: theme.spacing(6),
@@ -85,10 +86,10 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-function NavigationMenu() {
-    const [open, setOpen] = useState(true);
+const NavigationMenu = observer(() => {
+    const [open, setOpen] = useState(false);
     const classes = useStyles();
-    const theme = useTheme();
+    const { navigationStore } = useStores();
 
     const handleDrawerClose = () => {
         setOpen(false);
@@ -113,12 +114,30 @@ function NavigationMenu() {
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        className={clsx(classes.menuButton, {
+                        className={clsx( {
                             [classes.hide]: open,
                         })}
                     >
                         <MenuIcon />
                     </IconButton>
+                    <Typography>{navigationStore.currentPageName}</Typography>
+                    <Divider orientation={"vertical"} variant={"middle"}/>
+                    {navigationStore.buttons.map((elem) => {
+                        if ((elem as NavIconButtonProps).icon !== undefined) 
+                            return (<IconButton
+                                color="inherit"
+                                onClick={elem.onClick}
+                            >
+                                {React.createElement((elem as NavIconButtonProps).icon, {})}
+                            </IconButton>)
+                        if ((elem as NavTextButtonProps).text !== undefined)
+                            return (<Button
+                                color="inherit"
+                                onClick={elem.onClick}
+                            >
+                                <Typography>{(elem as NavTextButtonProps).text}</Typography>
+                            </Button>)
+                    })}
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -149,6 +168,6 @@ function NavigationMenu() {
             </Drawer>
         </div>
     );
-}
+})
 
 export default NavigationMenu;

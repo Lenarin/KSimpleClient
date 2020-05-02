@@ -12,8 +12,9 @@ const encode = encodeURIComponent;
 const handleErrors = (err: any) => {
     if (err && err.response && err.response.status === 401) {
         authStore.logout().then();
+        return;
     }
-    return err;
+    throw err;
 }
 
 const tokenPlugin = (req: SuperAgentRequest) => {
@@ -65,6 +66,14 @@ const Auth = {
         requests.post(`/users/${user.id}`, {...user})
 }
 
+const Templates = {
+    pull: () => 
+        requests.get('/templates'),
+    pullModelTree: (id: string) => 
+        requests.get(`/templates/${id}/tree`)
+}
+
 export default {
-    Auth
+    Auth,
+    Templates
 };

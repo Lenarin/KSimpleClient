@@ -5,7 +5,7 @@ import React, {ChangeEvent, useEffect} from "react";
 import {Button, Checkbox, FormControlLabel, Grid, Link, TextField, Typography} from "@material-ui/core";
 
 const LoginForm = observer((classes: Record<"root" | "image" | "paper" | "avatar" | "form" | "submit", string>) => {
-    const { authStore } = useStores();
+    const { authStore, commonStore } = useStores();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,7 +13,7 @@ const LoginForm = observer((classes: Record<"root" | "image" | "paper" | "avatar
             authStore.reset();
         }
     }, []);
-
+    
     const handleLoginChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         authStore.setUsername(e.target.value);
     }
@@ -24,8 +24,10 @@ const LoginForm = observer((classes: Record<"root" | "image" | "paper" | "avatar
 
     const handleSubmitForm = async (e: any) => {
         e.preventDefault();
-        await authStore.login();
-        await navigate('/', {replace: true});
+        await authStore
+            .login()
+            .then(() => navigate('/', {replace: true}))
+            .catch((err: Error) => alert(err.message));
     }
 
     return (

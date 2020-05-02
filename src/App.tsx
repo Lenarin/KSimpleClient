@@ -1,13 +1,14 @@
 import React from 'react';
-import {createStyles, CssBaseline} from "@material-ui/core";
+import {CssBaseline} from "@material-ui/core";
 import NavigationMenu from "./Components/NavigationMenu/NavigationMenu";
 import {Router, RouteComponentProps, Redirect} from "@reach/router"
 import Auth from "./Pages/Auth/Auth";
 import {makeStyles} from "@material-ui/core/styles";
 import {useStores} from "./hooks/use-stores";
+import Templates from "./Pages/Templates/Templates";
+import {observer} from "mobx-react";
 
 let Hello = (props: RouteComponentProps) => <div>Hello world!</div>
-let Templates = (props: RouteComponentProps) => <div>Templates</div>
 
 const useStyles = makeStyles(style => ({
     App: {
@@ -15,12 +16,14 @@ const useStyles = makeStyles(style => ({
     },
     App__content: {
         flexGrow: 1,
-        paddingTop: style.spacing(6)
+        paddingTop: style.spacing(6),
+        height: "100vh"
     }
 }));
 
 const Main = (props: RouteComponentProps) => {
     const classes = useStyles();
+    
 
     return(
         <div className={classes.App}>
@@ -36,7 +39,7 @@ const Main = (props: RouteComponentProps) => {
 }
 
 
-function App() {
+const App = observer(() => {
     const { commonStore } = useStores();
     
     return (
@@ -49,6 +52,6 @@ function App() {
             <Main path="/*" />
         </Router>
   );
-}
+})
 
 export default App;
