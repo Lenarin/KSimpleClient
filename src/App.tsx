@@ -7,6 +7,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useStores} from "./hooks/use-stores";
 import Templates from "./Pages/Templates/Templates";
 import {observer} from "mobx-react";
+import Storages from "./Pages/Storages/Storages";
 
 let Hello = (props: RouteComponentProps) => <div>Hello world!</div>
 
@@ -32,6 +33,7 @@ const Main = (props: RouteComponentProps) => {
             <Router className={classes.App__content}>
                 <Hello path="/"/>
                 <Templates path="templates"/>
+                <Storages path="storages" />
             </Router>
         </div>
     )

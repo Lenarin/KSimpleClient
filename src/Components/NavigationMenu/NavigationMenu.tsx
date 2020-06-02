@@ -16,6 +16,8 @@ import {Link} from "@reach/router";
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from "clsx";
 import CategoryIcon from '@material-ui/icons/Category';
+import FolderIcon from '@material-ui/icons/Folder';
+import GroupIcon from '@material-ui/icons/Group';
 import {useStores} from "../../hooks/use-stores";
 import {NavIconButtonProps, NavTextButtonProps} from "../../Stores/navigationStore";
 import {observer} from "mobx-react";
@@ -72,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
         toolbar: {
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-between',
             padding: theme.spacing(0, 1),
             minHeight: theme.spacing(6),
         },
@@ -82,6 +84,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         drawer__button: {
             padding: theme.spacing(1, 1)
+        },
+        drawer__logo: {
+            fontWeight: "bold"
         }
     }),
 );
@@ -154,6 +159,7 @@ const NavigationMenu = observer(() => {
                 }}
             >
                 <div className={classes.toolbar}>
+                    <Typography className={classes.drawer__logo}>{"KSimple"}</Typography>
                     <IconButton onClick={handleDrawerClose}>
                         <ChevronLeftIcon />
                     </IconButton>
@@ -163,6 +169,14 @@ const NavigationMenu = observer(() => {
                     <ListItem button key="templates" component={Link} to="/templates" className={classes.drawer__button}>
                         <ListItemIcon><CategoryIcon /></ListItemIcon>
                         <ListItemText primary={"Templates"} />
+                    </ListItem>
+                    <ListItem button key="storages" component={Link} to="/storages" className={classes.drawer__button}>
+                        <ListItemIcon><FolderIcon /></ListItemIcon>
+                        <ListItemText primary={"Storages"} />
+                    </ListItem>
+                    <ListItem button key="groups" component={Link} to="/templates" className={classes.drawer__button}>
+                        <ListItemIcon><GroupIcon /></ListItemIcon>
+                        <ListItemText primary={"Groups"} />
                     </ListItem>
                 </List>
             </Drawer>

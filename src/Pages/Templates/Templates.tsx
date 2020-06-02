@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {
     List,
     ListItem,
@@ -124,23 +124,27 @@ const Templates = observer((props: RouteComponentProps) => {
     const [templateHidden, setTemplateHidden] = useState<boolean>(false);
     const [openedWindow, setOpenedWindow] = useState<string>("editor");
     const [selectedModel, setSelectedModel] = useState<ModelTreeNode>(new ModelTreeNode())
-    
+
+    useLayoutEffect(() => {
+        navigationStore.setCurrentPageName("Templates");
+
+        let buttons: (NavIconButtonProps | NavTextButtonProps)[] = [];
+
+        if (templateHidden) buttons.push({text: "Show templates", onClick: () => setTemplateHidden(false)})
+        else buttons.push({text: "Hide templates", onClick: () => setTemplateHidden(true)})
+
+        if (openedWindow === "editor") buttons.push({text: "Code", onClick: () => setOpenedWindow("code")})
+        else buttons.push({text: "Editor", onClick: () => setOpenedWindow("editor")})
+
+        navigationStore.setButtons(buttons);
+    }, [templateHidden, openedWindow]);
     
     useEffect(() => {
         if (templateStore.templates === undefined)
             templateStore.pullTemplates().finally(() => handleSelectTemplate(templateStore.templates?.keys().next().value));
-        
-        navigationStore.setCurrentPageName("Templates");
-        
-        let buttons: (NavIconButtonProps | NavTextButtonProps)[] = [];
-        
-        if (templateHidden) buttons.push({text: "Show templates", onClick: () => setTemplateHidden(false)})
-        else buttons.push({text: "Hide templates", onClick: () => setTemplateHidden(true)})
-        
-        if (openedWindow === "editor") buttons.push({text: "Code", onClick: () => setOpenedWindow("code")})
-        else buttons.push({text: "Editor", onClick: () => setOpenedWindow("editor")})
-        
-        navigationStore.setButtons(buttons)
+        else
+            handleSelectTemplate(templateStore.templates?.keys().next().value);
+
     }, [templateHidden, openedWindow])
     
     useEffect(() => {
@@ -190,7 +194,7 @@ const Templates = observer((props: RouteComponentProps) => {
     }
 
     const parseTree = (nodes : ModelTreeNode) => {
-        const tree: TreeItem = {...nodes, localId: makeId(7)}
+        const tree: TreeItem = {...nodes, localId: makeId(7), expanded: true}
         return tree;
     }
     

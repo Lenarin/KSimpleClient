@@ -3,6 +3,7 @@ import SortableTree, {ThemeProps, TreeItem} from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
 import styles from "./node-content-renderer.module.scss";
 import {SvgIcon, SvgIconProps} from "@material-ui/core"; // This only needs to be imported once in your app
+import { Folder, VpnKey, FlashOn } from "@material-ui/icons";
 
 function HomeIcon(props: SvgIconProps) {
     return (
@@ -83,7 +84,14 @@ const theme: ThemeProps = {
                         (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')
                     }
                 >
-                    <HomeIcon fontSize={"small"}/>
+                    {nodeTitle === "root"
+                        ? <HomeIcon fontSize={"small"}/>
+                        : node.type === "folder"
+                            ? <Folder fontSize={"small"}/>
+                            : node.type === "value"
+                                ? <VpnKey fontSize={"small"}/>
+                                : <FlashOn fontSize={"small"}/>
+                    }
                     <div className={styles.rowLabel}>
                 <span
                     className={

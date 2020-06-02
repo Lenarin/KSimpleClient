@@ -53,6 +53,14 @@ const requests = {
             .use(tokenPlugin)
             .then(responseBody)
             .catch(handleErrors),
+    getUrlencoded: (url: string, data: object) =>
+        superagent
+            .get(`${API_ROOT}${url}`)
+            .type('form')
+            .query(data)
+            .use(tokenPlugin)
+            .then(responseBody)
+            .catch(handleErrors),
 }
 
 const Auth = {
@@ -73,7 +81,16 @@ const Templates = {
         requests.get(`/templates/${id}/tree`)
 }
 
+const Storages = {
+    pull: () =>
+        requests.get('/storages'),
+    pullPackets: (storageId: string, start: number, end: number) => {
+        return requests.getUrlencoded(`/storages/${storageId}/packets`, {start, end});
+    }
+}
+
 export default {
     Auth,
-    Templates
+    Templates,
+    Storages
 };
